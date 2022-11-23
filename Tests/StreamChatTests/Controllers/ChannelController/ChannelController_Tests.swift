@@ -2358,7 +2358,7 @@ final class ChannelController_Tests: XCTestCase {
 
     // MARK: - Load messages around given message id.
 
-    func test_loadMessagesAround() throws {
+    func test_loadPageAroundMessageId() throws {
         // Create dummy channel with messages
         let dummyChannel = dummyPayload(
             with: channelId,
@@ -2373,7 +2373,7 @@ final class ChannelController_Tests: XCTestCase {
         }
 
         var completionCalled = false
-        controller.loadMessagesAround(messageId: messageId, limit: 5) { error in
+        controller.loadPageAroundMessageId(messageId, limit: 5) { error in
             XCTAssertNil(error)
             completionCalled = true
         }
@@ -2416,7 +2416,7 @@ final class ChannelController_Tests: XCTestCase {
         AssertAsync.canBeReleased(&weakController)
     }
 
-    func test_loadMessagesAround_whenChannelNotYetCreated() throws {
+    func test_loadPageAroundMessageId_whenChannelNotYetCreated() throws {
         controller = ChatChannelController(
             channelQuery: .init(cid: channelId),
             channelListQuery: nil,
@@ -2424,7 +2424,7 @@ final class ChannelController_Tests: XCTestCase {
             isChannelAlreadyCreated: false
         )
         let exp = expectation(description: "load message around completes")
-        controller.loadMessagesAround(messageId: .unique, limit: 5) { error in
+        controller.loadPageAroundMessageId(.unique, limit: 5) { error in
             XCTAssertNotNil(error)
             exp.fulfill()
         }
@@ -2432,7 +2432,7 @@ final class ChannelController_Tests: XCTestCase {
         waitForExpectations(timeout: 0.5)
     }
 
-    func test_loadMessagesAround_whenRequestFails() throws {
+    func test_loadPageAroundMessageId_whenRequestFails() throws {
         // Create dummy channel with messages
         let dummyChannel = dummyPayload(
             with: channelId,
@@ -2447,7 +2447,7 @@ final class ChannelController_Tests: XCTestCase {
         }
 
         let exp = expectation(description: "should complete load messages around")
-        controller.loadMessagesAround(messageId: messageId, limit: 5) { error in
+        controller.loadPageAroundMessageId(messageId, limit: 5) { error in
             XCTAssertNotNil(error)
             exp.fulfill()
         }
