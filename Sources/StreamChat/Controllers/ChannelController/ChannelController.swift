@@ -1067,7 +1067,7 @@ public extension ChatChannelController {
         }
     }
 
-    // JUMPTODO: Is it possible to reuse this on the LLC level as well, and share between multiple controllers?
+    // 2. JUMPTODO: Is it possible to reuse this on the LLC level as well, and share between multiple controllers?
 
     private func updateOldestFetchedMessageId(with payload: ChannelPayload) {
         // Payload messages are ordered from oldest to newest
