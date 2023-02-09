@@ -673,6 +673,7 @@ final class ChannelController_Tests: XCTestCase {
                 isSilent: false,
                 quotedMessageId: nil,
                 createdAt: oldMessageCreatedAt,
+                skipPush: false,
                 extraData: [:]
             )
             // Simulate sending failed for this message
@@ -2474,9 +2475,6 @@ final class ChannelController_Tests: XCTestCase {
         // Should have cleared all the previous messages
         XCTAssertEqual(channel.messages.count, 0)
 
-        // Should set is jumping to message
-        XCTAssertEqual(controller.isJumpingToMessage, true)
-
         // Simulate successful update
         let expectedMessages: [MessagePayload] = [
             .dummy(),
@@ -2507,7 +2505,6 @@ final class ChannelController_Tests: XCTestCase {
         XCTAssertEqual(controller.lastNewestMessageId, expectedMessages.last?.id)
 
         AssertAsync.willBeTrue(completionCalled)
-        AssertAsync.willBeFalse(controller.isJumpingToMessage)
 
         // Should not leak memory
         weak var weakController = controller
@@ -2597,24 +2594,6 @@ final class ChannelController_Tests: XCTestCase {
 
         AssertAsync.willBeEqual(controller.messages.count, 0)
         AssertAsync.willBeEqual(env.channelUpdater?.update_callCount, 1)
-    }
-
-    func test_loadFirstPage_thenIsJumpingToMessage() throws {
-        // Create new channel with message in DB
-        try setupChannel()
-
-        let exp = expectation(description: "loadFirstPage should complete")
-        controller.loadFirstPage { _ in
-            exp.fulfill()
-        }
-
-        XCTAssertEqual(controller.isJumpingToMessage, true)
-
-        env.channelUpdater?.update_completion?(.success(.dummy()))
-
-        waitForExpectations(timeout: defaultTimeout)
-
-        XCTAssertEqual(controller.isJumpingToMessage, false)
     }
     
     // MARK: - Keystroke
