@@ -622,35 +622,23 @@ public class ChatChannelController: DataController, DelegateCallable, DataStoreP
         /// Send stop typing event.
         eventSender.stopTyping(in: cid, parentMessageId: nil)
 
-        let createNewMessage = {
-            self.updater.createNewMessage(
-                in: cid,
-                text: text,
-                pinning: pinning,
-                isSilent: isSilent,
-                command: nil,
-                arguments: nil,
-                attachments: attachments,
-                mentionedUserIds: mentionedUserIds,
-                quotedMessageId: quotedMessageId,
-                skipPush: skipPush,
+        updater.createNewMessage(
+            in: cid,
+            text: text,
+            pinning: pinning,
+            isSilent: isSilent,
+            command: nil,
+            arguments: nil,
+            attachments: attachments,
+            mentionedUserIds: mentionedUserIds,
+            quotedMessageId: quotedMessageId,
+            skipPush: skipPush,
             extraData: extraData
-            ) { result in
-                self.callback {
-                    completion?(result)
-                }
+        ) { result in
+            self.callback {
+                completion?(result)
             }
         }
-
-        let isFirstPageLoaded = hasLoadedAllNextMessages
-        if !isFirstPageLoaded {
-            loadFirstPage { _ in
-                createNewMessage()
-            }
-            return
-        }
-
-        createNewMessage()
     }
 
     /// Add users to the channel as members.
