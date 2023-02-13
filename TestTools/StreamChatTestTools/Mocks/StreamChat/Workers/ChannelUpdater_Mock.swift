@@ -66,7 +66,7 @@ final class ChannelUpdater_Mock: ChannelUpdater {
     @Atomic var createNewMessage_quotedMessageId: MessageId?
     @Atomic var createNewMessage_pinning: MessagePinning?
     @Atomic var createNewMessage_extraData: [String: RawJSON]?
-    @Atomic var createNewMessage_completion: ((Result<MessageId, Error>) -> Void)?
+    @Atomic var createNewMessage_completion: ((Result<ChatMessage, Error>) -> Void)?
 
     @Atomic var markRead_cid: ChannelId?
     @Atomic var markRead_userId: UserId?
@@ -256,7 +256,7 @@ final class ChannelUpdater_Mock: ChannelUpdater {
         quotedMessageId: MessageId?,
         skipPush: Bool,
         extraData: [String: RawJSON] = [:],
-        completion: ((Result<MessageId, Error>) -> Void)? = nil
+        completion: ((Result<ChatMessage, Error>) -> Void)? = nil
     ) {
         createNewMessage_cid = cid
         createNewMessage_text = text

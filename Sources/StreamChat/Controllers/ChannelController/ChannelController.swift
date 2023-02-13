@@ -638,8 +638,11 @@ public class ChatChannelController: DataController, DelegateCallable, DataStoreP
             skipPush: skipPush,
             extraData: extraData
         ) { result in
+            if let newMessage = try? result.get() {
+                self.client.eventNotificationCenter.process(NewMessagePendingEvent(message: newMessage))
+            }
             self.callback {
-                completion?(result)
+                completion?(result.map(\.id))
             }
         }
     }

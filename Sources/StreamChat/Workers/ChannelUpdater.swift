@@ -60,7 +60,7 @@ class ChannelUpdater: Worker {
                         channelDTO.messages = channelDTO.messages.filter { $0.localMessageState?.isLocalOnly == true }
                     }
 
-                    channelDTO?.isFirstPageLoaded = isFirstPage
+                    channelDTO?.isFirstPageLoaded = !isJumpingToMessage
 
                     try session.saveChannel(payload: payload)
 
@@ -261,9 +261,9 @@ class ChannelUpdater: Worker {
         quotedMessageId: MessageId?,
         skipPush: Bool,
         extraData: [String: RawJSON],
-        completion: ((Result<MessageId, Error>) -> Void)? = nil
+        completion: ((Result<ChatMessage, Error>) -> Void)? = nil
     ) {
-        var newMessageId: MessageId?
+        var newMessage: ChatMessage?
         database.write({ (session) in
             let newMessageDTO = try session.createNewMessage(
                 in: cid,
@@ -283,11 +283,10 @@ class ChannelUpdater: Worker {
             )
 
             newMessageDTO.localMessageState = .pendingSend
-            newMessageId = newMessageDTO.id
-
+            newMessage = try newMessageDTO.asModel()
         }) { error in
-            if let messageId = newMessageId, error == nil {
-                completion?(.success(messageId))
+            if let message = newMessage, error == nil {
+                completion?(.success(message))
             } else {
                 completion?(.failure(error ?? ClientError.Unknown()))
             }
