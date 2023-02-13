@@ -2115,8 +2115,6 @@ final class ChannelController_Tests: XCTestCase {
     func test_loadPreviousMessages_whenIsLoadingPreviousMessages_shouldNotCallChannelUpdater() throws {
         try setupChannel(channelPayload: dummyPayload(with: channelId, numberOfMessages: 1))
 
-        let pageSize = 25
-
         // Trigger loading previous messages
         controller.loadPreviousMessages(before: .unique)
         XCTAssertEqual(controller.isLoadingPreviousMessages, true)
@@ -2467,8 +2465,6 @@ final class ChannelController_Tests: XCTestCase {
             XCTAssertNil(error)
             completionCalled = true
         }
-
-        env.channelUpdater?.update_onBeforeSavingChannel?(client.databaseContainer.viewContext)
 
         let channel = try XCTUnwrap(client.databaseContainer.viewContext.channel(cid: channelId))
 
