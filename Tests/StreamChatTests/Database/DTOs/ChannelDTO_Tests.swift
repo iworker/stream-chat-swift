@@ -131,6 +131,46 @@ final class ChannelDTO_Tests: XCTestCase {
         XCTAssertEqual(channelDTO.previewMessage?.id, previewMessage.id)
     }
 
+    func test_saveChannel_whenNewPreviewReturnsNil_doesNotUpdatePreview() throws {
+        XCTFail()
+        // GIVEN
+        let previewMessage: MessagePayload = .dummy(
+            type: .regular,
+            messageId: .unique,
+            authorUserId: .unique
+        )
+
+        let channelPayload: ChannelPayload = .dummy(
+            channel: .dummy(),
+            messages: [previewMessage]
+        )
+
+        try database.writeSynchronously { session in
+            try session.saveChannel(payload: channelPayload)
+        }
+
+        // WHEN
+        let message: MessagePayload = .dummy(
+            type: .regular,
+            messageId: .unique,
+            authorUserId: .unique,
+            createdAt: previewMessage.createdAt.addingTimeInterval(-10)
+        )
+
+        let channelPayloadWithoutNewPreview: ChannelPayload = .dummy(
+            channel: channelPayload.channel,
+            messages: [message]
+        )
+
+        try database.writeSynchronously { session in
+            try session.saveChannel(payload: channelPayloadWithoutNewPreview)
+        }
+
+        // THEN
+        let channelDTO = try XCTUnwrap(database.viewContext.channel(cid: channelPayload.channel.cid))
+        XCTAssertEqual(channelDTO.previewMessage?.id, previewMessage.id)
+    }
+
     func test_saveChannel_channelReadsAreSavedBeforeMessages() throws {
         // GIVEN
         let currentUser: CurrentUserPayload = .dummy(userId: .unique, role: .user)
