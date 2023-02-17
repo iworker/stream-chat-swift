@@ -1779,6 +1779,14 @@ final class MessageDTO_Tests: XCTestCase {
         XCTAssertEqual(predicateCount, 0)
     }
 
+    func test_channelMessagesPredicate_whenNewestMessageAt_shouldIgnoreNewerMessages() throws {
+        XCTFail()
+    }
+
+    func test_channelMessagesPredicate_whenNewestMessageAt_whenFilterNewerMessagesIsFale_shouldNotIgnoreNewerMessages() throws {
+        XCTFail()
+    }
+
     // MARK: Add Reaction
 
     func test_addReaction_noCurrentUser() {
@@ -2735,6 +2743,14 @@ final class MessageDTO_Tests: XCTestCase {
 
         // THEN
         XCTAssertEqual(previewMessageDTO.id, validPreviewMessage.id)
+    }
+
+    func test_preview_whenPayloadIdDoesNotMatch_doesNotUpdateChannelPreview() {
+        XCTFail()
+    }
+
+    func test_preview_whenNewPreviewIsNil_doesNotUpdateChannelPreview() {
+        XCTFail()
     }
 
     func test_previewMessage_whenUpdated_triggersChannelUpdate() throws {
