@@ -97,6 +97,9 @@ open class ChatMessageListVC: _ViewController,
     /// (Used for jumping to a message)
     private(set) var messagePendingScrolling: ChatMessage?
 
+    /// The id of the first unread message
+    private(set) var firstUnreadIndexPath: IndexPath?
+
     /// A boolean value that determines wether date separators should be shown between each message.
     open var isDateSeparatorEnabled: Bool {
         components.messageListDateSeparatorEnabled
@@ -238,6 +241,16 @@ open class ChatMessageListVC: _ViewController,
     /// Scrolls to most recent message
     open func scrollToMostRecentMessage(animated: Bool = true) {
         listView.scrollToMostRecentMessage(animated: animated)
+    }
+
+    func setUnreadMessagesSeparator(at indexPath: IndexPath) {
+        var indexPathsToReload = [indexPath]
+        if let currentIndexPath = firstUnreadIndexPath {
+            indexPathsToReload.append(currentIndexPath)
+        }
+        firstUnreadIndexPath = indexPath
+
+        listView.reloadRows(at: indexPathsToReload, with: .automatic)
     }
 
     /// Updates the table view data with given `changes`.
@@ -488,6 +501,10 @@ open class ChatMessageListVC: _ViewController,
 
         cell.dateSeparatorView.isHidden = !shouldShowDateSeparator(forMessage: message, at: indexPath)
         cell.dateSeparatorView.content = dateSeparatorFormatter.format(message.createdAt)
+
+        if indexPath == firstUnreadIndexPath {
+            addUnreadSeparator(to: cell)
+        }
 
         return cell
     }
@@ -830,5 +847,9 @@ private extension ChatMessageListVC {
             let movedIndexPath = IndexPath(item: 0, section: 0)
             listView.reloadRows(at: [movedIndexPath], with: .none)
         }
+    }
+
+    func addUnreadSeparator(to cell: ChatMessageCell) {
+        // TODO:
     }
 }
