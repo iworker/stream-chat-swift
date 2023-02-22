@@ -488,7 +488,12 @@ open class _TableViewHeaderFooterReusableView: UITableViewHeaderFooterView, Cust
 
     open func setUp() { /* default empty implementation */ }
     open func setUpAppearance() { setNeedsLayout() }
-    open func setUpLayout() { setNeedsLayout() }
+    open func setUpLayout() {
+        /// Removes the subviews added by UITableViewHeaderFooterView
+        contentView.subviews.forEach { $0.removeFromSuperview() }
+        setNeedsLayout()
+    }
+
     open func updateContent() { setNeedsLayout() }
 
     override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

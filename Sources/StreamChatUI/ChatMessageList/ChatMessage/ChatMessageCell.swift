@@ -139,12 +139,13 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
     }
 
     private func updateDecoration(in container: UIView, decorationView: ChatMessageDecorationView?) {
+        container.subviews.forEach { $0.removeFromSuperview() }
+
         guard let decorationView = decorationView else {
             container.isHidden = true
             return
         }
 
-        container.subviews.forEach { $0.removeFromSuperview() }
         decorationView.translatesAutoresizingMaskIntoConstraints = false
         container.embed(decorationView)
         container.isHidden = false
