@@ -771,6 +771,7 @@ public class ChatChannelController: DataController, DelegateCallable, DataStoreP
         }
 
         guard
+            !markingRead,
             let currentUserId = client.currentUserId,
             let currentUserRead = channel.reads.first(where: { $0.user.id == currentUserId }),
             let lastMessageAt = channel.lastMessageAt,
@@ -779,10 +780,6 @@ public class ChatChannelController: DataController, DelegateCallable, DataStoreP
             callback {
                 completion?(nil)
             }
-            return
-        }
-
-        guard !markingRead else {
             return
         }
 
@@ -814,12 +811,14 @@ public class ChatChannelController: DataController, DelegateCallable, DataStoreP
             return
         }
 
-        guard let currentUserId = client.currentUserId else {
+        guard !markingRead, let currentUserId = client.currentUserId else {
             callback {
                 completion?(nil)
             }
             return
         }
+
+        markingRead = true
 
         updater.markUnread(from: messageId, cid: channel.cid, userId: currentUserId) { error in
             self.callback {

@@ -251,6 +251,10 @@ open class ChatChannelVC: _ViewController,
             dismiss(animated: true) { [weak self] in
                 self?.messageListVC.showThread(messageId: message.id)
             }
+        case is MarkUnreadActionItem:
+            dismiss(animated: true) { [weak self] in
+                self?.channelController.markUnread(from: message.id)
+            }
         default:
             return
         }
