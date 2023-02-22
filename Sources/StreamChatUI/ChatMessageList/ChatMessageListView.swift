@@ -171,18 +171,18 @@ open class ChatMessageListView: UITableView, Customizable, ComponentsProvider {
     /// Dequeues the decoration view for the given decorationViewClass. Registers the decorationView for received `decorationViewClass`
     /// if needed.
     /// - Parameters:
-    ///   - decorationViewClass: The type of decoration view the cell will be displaying.
+    ///   - decorationViewType: The type of decoration view the cell will be displaying.
     ///   - decorationType: The decoration type this view will be used for.
     ///   - indexPath: The cell index path.
     /// - Returns: The instance of `ChatMessageDecorationView` set up with the
     /// provided `decorationViewClass` and `indexPath`
-    open func dequeueReusableHeaderFooterView(
-        decorationViewClass: ChatMessageDecorationView.Type,
-        decorationType: ChatMessageDecorationType,
-        for indexPath: IndexPath
-    ) -> ChatMessageDecorationView {
+    open func dequeueReusableHeaderFooterView<DecorationViewType: ChatMessageDecorationView>(
+        ofType decorationViewType: DecorationViewType.Type,
+        withDecorationType decorationType: ChatMessageDecorationType,
+        at indexPath: IndexPath
+    ) -> DecorationViewType {
         let reuseIdentifier = self.reuseIdentifier(
-            decorationViewClass: decorationViewClass
+            decorationViewClass: decorationViewType
         )
 
         // There is no public API to find out
@@ -190,10 +190,10 @@ open class ChatMessageListView: UITableView, Customizable, ComponentsProvider {
         if !identifiers.contains(reuseIdentifier) {
             identifiers.insert(reuseIdentifier)
 
-            register(decorationViewClass, forHeaderFooterViewReuseIdentifier: reuseIdentifier)
+            register(decorationViewType, forHeaderFooterViewReuseIdentifier: reuseIdentifier)
         }
 
-        let decorationView = dequeueReusableHeaderFooterView(with: decorationViewClass, reuseIdentifier: reuseIdentifier)
+        let decorationView = dequeueReusableHeaderFooterView(with: decorationViewType, reuseIdentifier: reuseIdentifier)
         decorationView.decorationType = decorationType
         decorationView.indexPath = indexPath
         return decorationView

@@ -35,4 +35,16 @@ public protocol ChatMessageListVCDataSource: AnyObject {
         _ vc: ChatMessageListVC,
         messageLayoutOptionsAt indexPath: IndexPath
     ) -> ChatMessageLayoutOptions
+
+    func chatMessageListVC(
+        _ vc: ChatMessageListVC,
+        headerViewForMessage message: ChatMessage,
+        at indexPath: IndexPath
+    ) -> ChatMessageDecorationView?
+
+    func chatMessageListVC(
+        _ vc: ChatMessageListVC,
+        footerViewForMessage message: ChatMessage,
+        at indexPath: IndexPath
+    ) -> ChatMessageDecorationView?
 }

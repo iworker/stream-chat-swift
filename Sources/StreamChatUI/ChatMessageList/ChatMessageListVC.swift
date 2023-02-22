@@ -192,16 +192,6 @@ open class ChatMessageListVC: _ViewController,
         components.messageContentView
     }
 
-    /// Returns the decoration view class - if applicable - for the message at given `indexPath` and `decorationType`
-    open func decorationClassForMessage(at indexPath: IndexPath, for decorationType: ChatMessageDecorationType) -> ChatMessageDecorationView.Type? {
-        switch decorationType {
-        case .header:
-            return components.messageListDateSeparatorView
-        case .footer:
-            return nil
-        }
-    }
-
     /// Returns the attachment view injector for the message at given `indexPath`
     open func attachmentViewInjectorClassForMessage(at indexPath: IndexPath) -> AttachmentViewInjector.Type? {
         guard let message = dataSource?.chatMessageListVC(self, messageAt: indexPath) else {
@@ -407,6 +397,18 @@ open class ChatMessageListVC: _ViewController,
         navigationController?.present(alert, animated: true)
     }
 
+    open func decorationView<DecorationViewType: ChatMessageDecorationView>(
+        ofType decorationViewType: DecorationViewType.Type,
+        withDecorationType decorationType: ChatMessageDecorationType,
+        at indexPath: IndexPath
+    ) -> DecorationViewType {
+        listView.dequeueReusableHeaderFooterView(
+            ofType: decorationViewType,
+            withDecorationType: decorationType,
+            at: indexPath
+        )
+    }
+
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
     open func numberOfSections(in tableView: UITableView) -> Int {
@@ -440,16 +442,11 @@ open class ChatMessageListVC: _ViewController,
         cell.messageContentView?.channel = channel
         cell.messageContentView?.content = message
 
-        if
-            shouldShowDateSeparator(forMessage: message, at: indexPath),
-            let headerDecorationViewType = decorationClassForMessage(at: indexPath, for: .header) {
-            let headerDecorationView = listView
-                .dequeueReusableHeaderFooterView(decorationViewClass: headerDecorationViewType, decorationType: .header, for: indexPath)
-                .updateContentIf(typeIs: ChatMessageListDateSeparatorView.self) { $0.content = dateSeparatorFormatter.format(message.createdAt) }
-            cell.updateDecoration(for: .header, decorationView: headerDecorationView)
-        } else {
-            cell.updateDecoration(for: .header, decorationView: nil)
-        }
+        let headerView = dataSource?.chatMessageListVC(self, headerViewForMessage: message, at: indexPath)
+        let footerView = dataSource?.chatMessageListVC(self, footerViewForMessage: message, at: indexPath)
+
+        cell.updateDecoration(for: .header, decorationView: headerView)
+        cell.updateDecoration(for: .footer, decorationView: footerView)
 
         return cell
     }

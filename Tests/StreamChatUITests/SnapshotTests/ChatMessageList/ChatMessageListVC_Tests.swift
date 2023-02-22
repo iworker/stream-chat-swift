@@ -213,24 +213,6 @@ final class ChatMessageListVC_Tests: XCTestCase {
         XCTAssertFalse(messageDiff1.isContentEqual(to: messageDiff2))
     }
 
-    // MARK: - decorationClassForMessage
-
-    func test_decorationClassForMessage_decorationTypeIsHeader_returnsExpectedValue() {
-        let subject = ChatMessageListVC()
-        subject.client = ChatClient(config: ChatClientConfig(apiKey: .init(.unique)))
-        subject.components = .mock
-
-        XCTAssertTrue(ChatMessageListDateSeparatorView.self == subject.decorationClassForMessage(at: .init(row: 0, section: 0), for: .header))
-    }
-
-    func test_decorationClassForMessage_decorationTypeIsFooter_returnsExpectedValue() {
-        let subject = ChatMessageListVC()
-        subject.client = ChatClient(config: ChatClientConfig(apiKey: .init(.unique)))
-        subject.components = .mock
-
-        XCTAssertNil(subject.decorationClassForMessage(at: .init(row: 0, section: 0), for: .footer))
-    }
-
     // MARK: - cellForRow
 
     func test_cellForRow_isDateSeparatorEnabledIsFalse_headerIsNotVisibleOnCell() throws {
@@ -279,12 +261,42 @@ final class ChatMessageListVC_Tests: XCTestCase {
         subject.dataSource = mockDatasource
         mockDatasource.messages.append(.mock(createdAt: Date(timeIntervalSince1970: 172_800))) // Ensure that the 2 messages were createAt different days
         mockDatasource.messages.append(.mock())
+        mockDatasource.mockedHeaderView = ChatMessageListDateSeparatorView()
 
         let cell = try XCTUnwrap(subject.tableView(subject.listView, cellForRowAt: IndexPath(item: 0, section: 0)) as? ChatMessageCell)
-        let dateSeparator = try XCTUnwrap(cell.headerContainerView.subviews.first as? ChatMessageListDateSeparatorView)
 
         XCTAssertNotNil(cell.headerContainerView.superview)
-        XCTAssertEqual(dateSeparator.contentTextLabel.text, "Jan 03")
+        XCTAssertNotNil(cell.headerContainerView.subviews.first as? ChatMessageListDateSeparatorView)
+    }
+
+    // MARK: - decorationView(foType:)
+
+    func test_decorationClassForMessage_decorationTypeIsHeader_returnsExpectedValue() throws {
+        let subject = ChatMessageListVC()
+
+        let decorationView = try XCTUnwrap(subject.decorationView(
+            ofType: ChatMessageListDateSeparatorView.self,
+            withDecorationType: .header,
+            at: IndexPath(row: 0, section: 0)
+        )
+        )
+
+        XCTAssertEqual(decorationView.indexPath, IndexPath(row: 0, section: 0))
+        XCTAssertEqual(decorationView.decorationType, .header)
+    }
+
+    func test_decorationClassForMessage_decorationTypeIsFooter_returnsExpectedValue() throws {
+        let subject = ChatMessageListVC()
+
+        let decorationView = try XCTUnwrap(subject.decorationView(
+            ofType: ChatMessageListDateSeparatorView.self,
+            withDecorationType: .footer,
+            at: IndexPath(row: 0, section: 0)
+        )
+        )
+
+        XCTAssertEqual(decorationView.indexPath, IndexPath(row: 0, section: 0))
+        XCTAssertEqual(decorationView.decorationType, .footer)
     }
 }
 
@@ -325,6 +337,8 @@ private class ChatMessageCell_Mock: ChatMessageCell {
 
 private class ChatMessageListVCDataSource_Mock: ChatMessageListVCDataSource {
     var mockedChannel: ChatChannel?
+    var mockedHeaderView: ChatMessageDecorationView?
+    var mockedFooterView: ChatMessageDecorationView?
     func channel(for vc: ChatMessageListVC) -> ChatChannel? {
         mockedChannel
     }
@@ -341,5 +355,13 @@ private class ChatMessageListVCDataSource_Mock: ChatMessageListVCDataSource {
 
     func chatMessageListVC(_ vc: StreamChatUI.ChatMessageListVC, messageLayoutOptionsAt indexPath: IndexPath) -> StreamChatUI.ChatMessageLayoutOptions {
         .init()
+    }
+
+    func chatMessageListVC(_ vc: StreamChatUI.ChatMessageListVC, headerViewForMessage message: StreamChat.ChatMessage, at indexPath: IndexPath) -> StreamChatUI.ChatMessageDecorationView? {
+        mockedHeaderView
+    }
+
+    func chatMessageListVC(_ vc: StreamChatUI.ChatMessageListVC, footerViewForMessage message: StreamChat.ChatMessage, at indexPath: IndexPath) -> StreamChatUI.ChatMessageDecorationView? {
+        mockedFooterView
     }
 }
