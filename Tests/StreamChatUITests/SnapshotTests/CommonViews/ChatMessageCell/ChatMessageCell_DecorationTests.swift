@@ -17,6 +17,12 @@ final class ChatMessageCell_DecorationTests: XCTestCase {
             attachmentViewInjectorType: nil,
             options: [.bubble]
         )
+
+        subject.setUpLayout()
+
+        subject.frame = .init(x: 0, y: 0, width: 100, height: 200)
+        subject.setNeedsLayout()
+        subject.layoutIfNeeded()
     }
 
     override func tearDownWithError() throws {
@@ -26,22 +32,12 @@ final class ChatMessageCell_DecorationTests: XCTestCase {
 
     // MARK: - setupLayout
 
-    func test_setupLayout_headerAndFooterContainersHaveBeenAddedInHierarchy() {
-        subject.setUpLayout()
-
-        XCTAssertEqual(subject.containerStackView.subviews.count, 3)
+    func test_setupLayout_headerAndFooterContainersAreNotInHierarchy() {
+        XCTAssertEqual(subject.containerStackView.subviews.count, 1)
     }
 
-    func test_setupLayout_headerAndFooterContainersHaveSameWidthAsTheCell() {
-        subject.setUpLayout()
-
-        subject.frame = .init(x: 0, y: 0, width: 100, height: 200)
-        subject.setNeedsLayout()
-        subject.layoutIfNeeded()
-
-        XCTAssertEqual(subject.headerContainerView.frame.size.width, 100)
-        XCTAssertEqual(subject.containerStackView.frame.size.width, 100)
-        XCTAssertEqual(subject.footerContainerView.frame.size.width, 100)
+    func test_setupLayout_messageContentViewHasSameWidthAsTheCell() {
+        XCTAssertEqual(100, subject.messageContentView?.frame.size.width)
     }
 
     // MARK: - setUpAppearance
@@ -59,17 +55,13 @@ final class ChatMessageCell_DecorationTests: XCTestCase {
     // MARK: - prepareForReuse
 
     func test_prepareForReuse_configuresHeaderAndFooterContainersCorrectly() {
-        subject.headerContainerView.addSubview(.init())
-        subject.headerContainerView.isHidden = false
-        subject.footerContainerView.addSubview(.init())
-        subject.footerContainerView.isHidden = false
+        subject.contentView.addSubview(subject.headerContainerView)
+        subject.contentView.addSubview(subject.footerContainerView)
 
         subject.prepareForReuse()
 
-        XCTAssertTrue(subject.headerContainerView.subviews.isEmpty)
-        XCTAssertTrue(subject.headerContainerView.isHidden)
-        XCTAssertTrue(subject.footerContainerView.subviews.isEmpty)
-        XCTAssertTrue(subject.footerContainerView.isHidden)
+        XCTAssertNil(subject.headerContainerView.superview)
+        XCTAssertNil(subject.footerContainerView.superview)
     }
 
     // MARK: - updateDecoration
@@ -82,7 +74,8 @@ final class ChatMessageCell_DecorationTests: XCTestCase {
 
         XCTAssertEqual(subject.headerContainerView.subviews.count, 1)
         XCTAssertEqual(subject.headerContainerView.subviews.first, decorationView)
-        XCTAssertFalse(subject.headerContainerView.isHidden)
+        XCTAssertEqual(subject.headerContainerView.superview, subject.containerStackView)
+        XCTAssertEqual(subject.headerContainerView, subject.containerStackView.arrangedSubviews.first)
     }
 
     func test_updateDecoration_decorationTypeIsHeaderAndDecorationViewIsNotNilAndLaterUpdateWithDecorationViewNil_updatesHeaderContainerAsExpected() {
@@ -92,8 +85,7 @@ final class ChatMessageCell_DecorationTests: XCTestCase {
         subject.updateDecoration(for: .header, decorationView: decorationView)
         subject.updateDecoration(for: .header, decorationView: nil)
 
-        XCTAssertTrue(subject.headerContainerView.subviews.isEmpty)
-        XCTAssertTrue(subject.headerContainerView.isHidden)
+        XCTAssertNil(subject.headerContainerView.superview)
     }
 
     func test_updateDecoration_decorationTypeIsFooterAndDecorationViewIsNotNil_updatesFooterContainerAsExpected() {
@@ -104,17 +96,17 @@ final class ChatMessageCell_DecorationTests: XCTestCase {
 
         XCTAssertEqual(subject.footerContainerView.subviews.count, 1)
         XCTAssertEqual(subject.footerContainerView.subviews.first, decorationView)
-        XCTAssertFalse(subject.footerContainerView.isHidden)
+        XCTAssertEqual(subject.footerContainerView.superview, subject.containerStackView)
+        XCTAssertEqual(subject.footerContainerView, subject.containerStackView.arrangedSubviews.last)
     }
 
     func test_updateDecoration_decorationTypeIsFooterAndDecorationViewIsNotNilAndLaterUpdateWithDecorationViewNil_updatesFooterContainerAsExpected() {
         final class MockDecorationView: ChatMessageDecorationView {}
         let decorationView = MockDecorationView()
 
-        subject.updateDecoration(for: .header, decorationView: decorationView)
-        subject.updateDecoration(for: .header, decorationView: nil)
+        subject.updateDecoration(for: .footer, decorationView: decorationView)
+        subject.updateDecoration(for: .footer, decorationView: nil)
 
-        XCTAssertTrue(subject.headerContainerView.subviews.isEmpty)
-        XCTAssertTrue(subject.headerContainerView.isHidden)
+        XCTAssertNil(subject.footerContainerView.superview)
     }
 }

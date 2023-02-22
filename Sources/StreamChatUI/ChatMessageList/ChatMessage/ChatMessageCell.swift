@@ -47,9 +47,7 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
         containerStackView.axis = .vertical
         containerStackView.alignment = .center
         containerStackView.spacing = 8
-        containerStackView.addArrangedSubview(headerContainerView)
         messageContentView.map { containerStackView.addArrangedSubview($0) }
-        containerStackView.addArrangedSubview(footerContainerView)
         contentView.addSubview(containerStackView)
 
         containerStackView.pin(
@@ -57,17 +55,7 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
             to: contentView
         )
 
-        headerContainerView.pin(
-            anchors: [.leading, .trailing],
-            to: containerStackView
-        )
-
         messageContentView?.pin(
-            anchors: [.leading, .trailing],
-            to: containerStackView
-        )
-
-        footerContainerView.pin(
             anchors: [.leading, .trailing],
             to: containerStackView
         )
@@ -89,16 +77,16 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
         super.prepareForReuse()
 
         messageContentView?.prepareForReuse()
-        updateDecoration(for: .header, decorationView: nil)
-        updateDecoration(for: .footer, decorationView: nil)
+        headerContainerView.removeFromSuperview()
+        footerContainerView.removeFromSuperview()
     }
 
     public func updateDecoration(for decorationType: ChatMessageDecorationType, decorationView: ChatMessageDecorationView?) {
         switch decorationType {
         case .header:
-            updateDecoration(in: headerContainerView, decorationView: decorationView)
+            updateDecoration(in: headerContainerView, decorationView: decorationView, decorationType: decorationType)
         case .footer:
-            updateDecoration(in: footerContainerView, decorationView: decorationView)
+            updateDecoration(in: footerContainerView, decorationView: decorationView, decorationType: decorationType)
         }
     }
 
@@ -138,16 +126,30 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
         )
     }
 
-    private func updateDecoration(in container: UIView, decorationView: ChatMessageDecorationView?) {
+    private func updateDecoration(
+        in container: UIView,
+        decorationView: ChatMessageDecorationView?,
+        decorationType: ChatMessageDecorationType
+    ) {
         container.subviews.forEach { $0.removeFromSuperview() }
 
         guard let decorationView = decorationView else {
-            container.isHidden = true
+            container.removeFromSuperview()
             return
         }
 
         decorationView.translatesAutoresizingMaskIntoConstraints = false
         container.embed(decorationView)
-        container.isHidden = false
+        switch decorationType {
+        case .header:
+            containerStackView.insertArrangedSubview(container, at: 0)
+        case .footer:
+            containerStackView.insertArrangedSubview(container, at: containerStackView.arrangedSubviews.count)
+        }
+
+        container.pin(
+            anchors: [.leading, .trailing],
+            to: containerStackView
+        )
     }
 }

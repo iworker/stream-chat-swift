@@ -247,7 +247,7 @@ final class ChatMessageListVC_Tests: XCTestCase {
         let cell = try XCTUnwrap(subject.tableView(subject.listView, cellForRowAt: IndexPath(item: 0, section: 0)) as? ChatMessageCell)
         subject.view.addSubview(cell) // This is used to trigger the setUpLayout cycle of the cell
 
-        XCTAssertTrue(cell.headerContainerView.isHidden)
+        XCTAssertNil(cell.headerContainerView.superview)
     }
 
     func test_cellForRow_isDateSeparatorEnabledIsTrueShouldShowDateSeparatorIsReturnsFalse_headerIsNotVisibleOnCell() throws {
@@ -265,7 +265,7 @@ final class ChatMessageListVC_Tests: XCTestCase {
         let cell = try XCTUnwrap(subject.tableView(subject.listView, cellForRowAt: IndexPath(item: 0, section: 0)) as? ChatMessageCell)
         subject.view.addSubview(cell)
 
-        XCTAssertTrue(cell.headerContainerView.isHidden)
+        XCTAssertNil(cell.headerContainerView.superview)
     }
 
     func test_cellForRow_shouldShowDateSeparatorIsReturnsFalse_headerIsVisibleAndCorrectlyConfiguredOnCell() throws {
@@ -283,7 +283,7 @@ final class ChatMessageListVC_Tests: XCTestCase {
         let cell = try XCTUnwrap(subject.tableView(subject.listView, cellForRowAt: IndexPath(item: 0, section: 0)) as? ChatMessageCell)
         let dateSeparator = try XCTUnwrap(cell.headerContainerView.subviews.first as? ChatMessageListDateSeparatorView)
 
-        XCTAssertFalse(cell.headerContainerView.isHidden)
+        XCTAssertNotNil(cell.headerContainerView.superview)
         XCTAssertEqual(dateSeparator.contentTextLabel.text, "Jan 03")
     }
 }
