@@ -235,9 +235,16 @@ public extension ChatMessageLayoutOptions {
 // MARK: - Refactoring of message list date separator
 
 extension ChatMessageListScrollOverlayView {
-    @available(*, deprecated, message: "use `dateSeparatorView.textLabel` instead.")
+    @available(*, deprecated, message: "use `dateSeparatorView.contentTextLabel` instead.")
     public var textLabel: UILabel {
-        dateSeparatorView.textLabel
+        dateSeparatorView.contentTextLabel
+    }
+}
+
+extension ChatMessageListDateSeparatorView {
+    @available(*, deprecated, message: "use `contentTextLabel` instead.")
+    override open var textLabel: UILabel? {
+        contentTextLabel
     }
 }
 
