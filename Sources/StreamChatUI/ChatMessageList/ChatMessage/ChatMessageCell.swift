@@ -81,7 +81,10 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
         footerContainerView.removeFromSuperview()
     }
 
-    public func updateDecoration(for decorationType: ChatMessageDecorationType, decorationView: ChatMessageDecorationView?) {
+    public func updateDecoration(
+        for decorationType: ChatMessageDecorationType,
+        decorationView: ChatMessageDecorationView?
+    ) {
         switch decorationType {
         case .header:
             updateDecoration(in: headerContainerView, decorationView: decorationView, decorationType: decorationType)

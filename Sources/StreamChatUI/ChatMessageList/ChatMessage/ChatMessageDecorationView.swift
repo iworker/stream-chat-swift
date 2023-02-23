@@ -26,17 +26,4 @@ open class ChatMessageDecorationView: _TableViewHeaderFooterReusableView {
 
     /// The indexPath of the ChatMessageCell that this decoration belongs to.
     open var indexPath: IndexPath!
-
-    /// A convenience method that allows for inline content updates of a decorationView if it
-    /// matches the provided type.
-    public func updateContentIf<DecorationViewType: ChatMessageDecorationView>(
-        typeIs decorationViewType: DecorationViewType.Type,
-        configurationBlock: (DecorationViewType) -> Void
-    ) -> ChatMessageDecorationView? {
-        guard let castedValue = self as? DecorationViewType else {
-            return self
-        }
-        configurationBlock(castedValue)
-        return castedValue
-    }
 }

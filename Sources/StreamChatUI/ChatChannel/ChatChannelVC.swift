@@ -180,34 +180,6 @@ open class ChatChannelVC: _ViewController,
         )
     }
 
-    open func chatMessageListVC(
-        _ vc: ChatMessageListVC,
-        headerViewForMessage message: ChatMessage,
-        at indexPath: IndexPath
-    ) -> ChatMessageDecorationView? {
-        guard
-            vc.shouldShowDateSeparator(forMessage: message, at: indexPath)
-        else {
-            return nil
-        }
-
-        let dateSeparatorView = vc.decorationView(
-            ofType: components.messageListDateSeparatorView,
-            withDecorationType: .header,
-            at: indexPath
-        )
-        dateSeparatorView.content = vc.dateSeparatorFormatter.format(message.createdAt)
-        return dateSeparatorView
-    }
-
-    open func chatMessageListVC(
-        _ vc: ChatMessageListVC,
-        footerViewForMessage message: ChatMessage,
-        at indexPath: IndexPath
-    ) -> ChatMessageDecorationView? {
-        nil
-    }
-
     // MARK: - ChatMessageListVCDelegate
 
     open func chatMessageListVC(
@@ -269,6 +241,22 @@ open class ChatChannelVC: _ViewController,
         with gestureRecognizer: UITapGestureRecognizer
     ) {
         messageComposerVC.dismissSuggestions()
+    }
+
+    open func chatMessageListVC(
+        _ vc: ChatMessageListVC,
+        decorationViewForMessage message: ChatMessage,
+        decorationType: ChatMessageDecorationType,
+        at indexPath: IndexPath
+    ) -> ChatMessageDecorationView? {
+        switch decorationType {
+        case .header where vc.shouldShowDateSeparator(forMessage: message, at: indexPath):
+            let dateSeparatorView = components.messageListDateSeparatorView.init()
+            dateSeparatorView.content = vc.dateSeparatorFormatter.format(message.createdAt)
+            return dateSeparatorView
+        default:
+            return nil
+        }
     }
 
     // MARK: - ChatChannelControllerDelegate

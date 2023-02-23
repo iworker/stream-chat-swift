@@ -397,18 +397,6 @@ open class ChatMessageListVC: _ViewController,
         navigationController?.present(alert, animated: true)
     }
 
-    open func decorationView<DecorationViewType: ChatMessageDecorationView>(
-        ofType decorationViewType: DecorationViewType.Type,
-        withDecorationType decorationType: ChatMessageDecorationType,
-        at indexPath: IndexPath
-    ) -> DecorationViewType {
-        listView.dequeueReusableHeaderFooterView(
-            ofType: decorationViewType,
-            withDecorationType: decorationType,
-            at: indexPath
-        )
-    }
-
     // MARK: - UITableViewDataSource & UITableViewDelegate
 
     open func numberOfSections(in tableView: UITableView) -> Int {
@@ -442,11 +430,17 @@ open class ChatMessageListVC: _ViewController,
         cell.messageContentView?.channel = channel
         cell.messageContentView?.content = message
 
-        let headerView = dataSource?.chatMessageListVC(self, headerViewForMessage: message, at: indexPath)
-        let footerView = dataSource?.chatMessageListVC(self, footerViewForMessage: message, at: indexPath)
-
-        cell.updateDecoration(for: .header, decorationView: headerView)
-        cell.updateDecoration(for: .footer, decorationView: footerView)
+        [ChatMessageDecorationType.header, .footer].forEach { decorationType in
+            cell.updateDecoration(
+                for: decorationType,
+                decorationView: delegate?.chatMessageListVC(
+                    self,
+                    decorationViewForMessage: message,
+                    decorationType: decorationType,
+                    at: indexPath
+                )
+            )
+        }
 
         return cell
     }

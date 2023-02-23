@@ -469,47 +469,4 @@ open class _TableViewCell: UITableViewCell, Customizable, AccessibilityView {
 
 /// Base class for overridable views StreamChatUI provides.
 /// All conformers will have StreamChatUI appearance settings by default.
-open class _TableViewHeaderFooterReusableView: UITableViewHeaderFooterView, Customizable, AccessibilityView {
-    // Flag for preventing multiple lifecycle methods calls.
-    private var isInitialized: Bool = false
-
-    override open func didMoveToSuperview() {
-        super.didMoveToSuperview()
-        guard !isInitialized, superview != nil else { return }
-
-        isInitialized = true
-
-        setAccessibilityIdentifier()
-        setUp()
-        setUpLayout()
-        setUpAppearance()
-        updateContent()
-    }
-
-    open func setUp() { /* default empty implementation */ }
-    open func setUpAppearance() { setNeedsLayout() }
-    open func setUpLayout() {
-        /// Removes the subviews added by UITableViewHeaderFooterView
-        contentView.subviews.forEach { $0.removeFromSuperview() }
-        setNeedsLayout()
-    }
-
-    open func updateContent() { setNeedsLayout() }
-
-    override open func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        guard #available(iOS 12, *) else { return }
-        guard previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
-
-        TraitCollectionReloadStack.push {
-            self.setUpAppearance()
-            self.updateContent()
-        }
-    }
-
-    override open func layoutSubviews() {
-        TraitCollectionReloadStack.executePendingUpdates()
-        super.layoutSubviews()
-    }
-}
+open class _TableViewHeaderFooterReusableView: _View {}

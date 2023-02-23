@@ -241,13 +241,6 @@ extension ChatMessageListScrollOverlayView {
     }
 }
 
-extension ChatMessageListDateSeparatorView {
-    @available(*, deprecated, message: "use `contentTextLabel` instead.")
-    override open var textLabel: UILabel? {
-        contentTextLabel
-    }
-}
-
 // MARK: - Formatters
 
 extension DateFormatter {

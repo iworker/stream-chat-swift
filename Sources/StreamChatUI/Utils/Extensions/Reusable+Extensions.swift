@@ -39,7 +39,7 @@ extension UITableView {
     ///   - type: A generic decorationView type
     ///   - reuseIdentifier: The reuseIdentifier of the view to dequeue
     /// - Returns: A cell from the type passed through
-    func dequeueReusableHeaderFooterView<DecorationView: UITableViewHeaderFooterView>(with type: DecorationView.Type, reuseIdentifier: String) -> DecorationView {
+    func dequeueReusableHeaderFooterView<DecorationView>(with type: DecorationView.Type, reuseIdentifier: String) -> DecorationView {
         dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier) as! DecorationView
     }
 }

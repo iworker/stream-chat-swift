@@ -46,4 +46,11 @@ public protocol ChatMessageListVCDelegate: AnyObject {
         didTapOnMessageListView messageListView: ChatMessageListView,
         with gestureRecognizer: UITapGestureRecognizer
     )
+
+    func chatMessageListVC(
+        _ vc: ChatMessageListVC,
+        decorationViewForMessage message: ChatMessage,
+        decorationType: ChatMessageDecorationType,
+        at indexPath: IndexPath
+    ) -> ChatMessageDecorationView?
 }

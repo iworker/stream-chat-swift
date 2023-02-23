@@ -20,8 +20,8 @@ final class ChatMessageListDateSeparatorView_Tests: XCTestCase {
     func test_setUpLayout_subviewsHaveBeenConfiguredCorrectly() {
         subject.setUpLayout()
 
-        XCTAssertEqual(subject.contentView.subviews.count, 1)
-        XCTAssertEqual(subject.contentView.subviews.first, subject.container)
+        XCTAssertEqual(subject.subviews.count, 1)
+        XCTAssertEqual(subject.subviews.first, subject.container)
         XCTAssertEqual(subject.container.subviews.count, 1)
         XCTAssertEqual(subject.container.subviews.first, subject.contentTextLabel)
     }

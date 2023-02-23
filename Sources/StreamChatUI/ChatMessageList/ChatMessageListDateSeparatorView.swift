@@ -27,7 +27,7 @@ open class ChatMessageListDateSeparatorView: ChatMessageDecorationView, Appearan
     override open func setUpLayout() {
         super.setUpLayout()
 
-        contentView.addSubview(container)
+        addSubview(container)
 
         container.embed(contentTextLabel, insets: .init(top: 3, leading: 9, bottom: 3, trailing: 9))
 
