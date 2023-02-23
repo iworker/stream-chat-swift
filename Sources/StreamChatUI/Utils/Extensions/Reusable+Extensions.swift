@@ -33,15 +33,6 @@ extension UITableView {
     func dequeueReusableCell<Cell: UITableViewCell>(with type: Cell.Type, for indexPath: IndexPath, reuseIdentifier: String? = nil) -> Cell {
         dequeueReusableCell(withIdentifier: reuseIdentifier ?? type.reuseIdentifier, for: indexPath) as! Cell
     }
-
-    /// Dequeues a `UITableView` UITableViewHeaderFooterView with a generic type and indexPath
-    /// - Parameters:
-    ///   - type: A generic decorationView type
-    ///   - reuseIdentifier: The reuseIdentifier of the view to dequeue
-    /// - Returns: A cell from the type passed through
-    func dequeueReusableHeaderFooterView<DecorationView>(with type: DecorationView.Type, reuseIdentifier: String) -> DecorationView {
-        dequeueReusableHeaderFooterView(withIdentifier: reuseIdentifier) as! DecorationView
-    }
 }
 
 extension UICollectionViewCell: Reusable {}

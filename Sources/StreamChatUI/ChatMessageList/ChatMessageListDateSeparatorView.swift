@@ -18,7 +18,7 @@ open class ChatMessageListDateSeparatorView: ChatMessageDecorationView, Appearan
         .withAccessibilityIdentifier(identifier: "dateSeparatorContainer")
 
     /// The text label that renders the date string.
-    open private(set) lazy var contentTextLabel: UILabel = UILabel()
+    open private(set) lazy var textLabel: UILabel = UILabel()
         .withBidirectionalLanguagesSupport
         .withAdjustingFontForContentSizeCategory
         .withoutAutoresizingMaskConstraints
@@ -29,7 +29,7 @@ open class ChatMessageListDateSeparatorView: ChatMessageDecorationView, Appearan
 
         addSubview(container)
 
-        container.embed(contentTextLabel, insets: .init(top: 3, leading: 9, bottom: 3, trailing: 9))
+        container.embed(textLabel, insets: .init(top: 3, leading: 9, bottom: 3, trailing: 9))
 
         NSLayoutConstraint.activate([
             container.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor),
@@ -46,14 +46,14 @@ open class ChatMessageListDateSeparatorView: ChatMessageDecorationView, Appearan
         backgroundColor = nil
         container.backgroundColor = appearance.colorPalette.background7
 
-        contentTextLabel.font = appearance.fonts.footnote
-        contentTextLabel.textColor = appearance.colorPalette.staticColorText
+        textLabel.font = appearance.fonts.footnote
+        textLabel.textColor = appearance.colorPalette.staticColorText
     }
 
     override open func updateContent() {
         super.updateContent()
 
-        contentTextLabel.text = content
+        textLabel.text = content
     }
 
     override open func layoutSubviews() {

@@ -90,21 +90,6 @@ open class ChatMessageListView: UITableView, Customizable, ComponentsProvider {
         return components.joined(separator: "_")
     }
 
-    /// Calculates the decorationView reuse identifier for the given options.
-    /// - Parameters:
-    ///   - decorationViewClass: The type of message content view.
-    /// - Returns: The decorationView reuse identifier.
-    open func reuseIdentifier(
-        decorationViewClass: UIView.Type
-    ) -> String {
-        let components = [
-            ChatMessageCell.reuseId,
-            ChatMessageDecorationView.reuseId,
-            String(describing: decorationViewClass)
-        ]
-        return components.joined(separator: "_")
-    }
-
     /// Returns the reuse identifier of the given cell.
     /// - Parameter cell: The cell to calculate reuse identifier for.
     /// - Returns: The reuse identifier.
@@ -166,37 +151,6 @@ open class ChatMessageListView: UITableView, Customizable, ComponentsProvider {
         cell.contentView.transform = .mirrorY
 
         return cell
-    }
-
-    /// Dequeues the decoration view for the given decorationViewClass. Registers the decorationView for received `decorationViewClass`
-    /// if needed.
-    /// - Parameters:
-    ///   - decorationViewType: The type of decoration view the cell will be displaying.
-    ///   - decorationType: The decoration type this view will be used for.
-    ///   - indexPath: The cell index path.
-    /// - Returns: The instance of `ChatMessageDecorationView` set up with the
-    /// provided `decorationViewClass` and `indexPath`
-    open func dequeueReusableHeaderFooterView<DecorationViewType: ChatMessageDecorationView>(
-        ofType decorationViewType: DecorationViewType.Type,
-        withDecorationType decorationType: ChatMessageDecorationType,
-        at indexPath: IndexPath
-    ) -> DecorationViewType {
-        let reuseIdentifier = self.reuseIdentifier(
-            decorationViewClass: decorationViewType
-        )
-
-        // There is no public API to find out
-        // if the given `identifier` is registered.
-        if !identifiers.contains(reuseIdentifier) {
-            identifiers.insert(reuseIdentifier)
-
-            register(decorationViewType, forHeaderFooterViewReuseIdentifier: reuseIdentifier)
-        }
-
-        let decorationView = dequeueReusableHeaderFooterView(with: decorationViewType, reuseIdentifier: reuseIdentifier)
-        decorationView.decorationType = decorationType
-        decorationView.indexPath = indexPath
-        return decorationView
     }
 
     /// Scrolls to most recent message

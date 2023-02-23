@@ -23,7 +23,7 @@ final class ChatMessageListDateSeparatorView_Tests: XCTestCase {
         XCTAssertEqual(subject.subviews.count, 1)
         XCTAssertEqual(subject.subviews.first, subject.container)
         XCTAssertEqual(subject.container.subviews.count, 1)
-        XCTAssertEqual(subject.container.subviews.first, subject.contentTextLabel)
+        XCTAssertEqual(subject.container.subviews.first, subject.textLabel)
     }
 
     // MARK: - setUpAppearance
@@ -33,8 +33,8 @@ final class ChatMessageListDateSeparatorView_Tests: XCTestCase {
 
         XCTAssertNil(subject.backgroundColor)
         XCTAssertEqual(subject.container.backgroundColor, subject.appearance.colorPalette.background7)
-        XCTAssertEqual(subject.contentTextLabel.font, subject.appearance.fonts.footnote)
-        XCTAssertEqual(subject.contentTextLabel.textColor, subject.appearance.colorPalette.staticColorText)
+        XCTAssertEqual(subject.textLabel.font, subject.appearance.fonts.footnote)
+        XCTAssertEqual(subject.textLabel.textColor, subject.appearance.colorPalette.staticColorText)
     }
 
     // MARK: - updateContent
@@ -45,7 +45,7 @@ final class ChatMessageListDateSeparatorView_Tests: XCTestCase {
 
         subject.updateContent()
 
-        XCTAssertEqual(subject.contentTextLabel.text, expected)
+        XCTAssertEqual(subject.textLabel.text, expected)
     }
 
     // MARK: - layoutSubviews
