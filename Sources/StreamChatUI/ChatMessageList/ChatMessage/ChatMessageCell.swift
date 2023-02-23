@@ -85,12 +85,28 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
         for decorationType: ChatMessageDecorationType,
         decorationView: ChatMessageDecorationView?
     ) {
+        let container = decorationType == .header ? headerContainerView : footerContainerView
+
+        container.subviews.forEach { $0.removeFromSuperview() }
+
+        guard let decorationView = decorationView else {
+            container.removeFromSuperview()
+            return
+        }
+
+        decorationView.translatesAutoresizingMaskIntoConstraints = false
+        container.embed(decorationView)
         switch decorationType {
         case .header:
-            updateDecoration(in: headerContainerView, decorationView: decorationView, decorationType: decorationType)
+            containerStackView.insertArrangedSubview(container, at: 0)
         case .footer:
-            updateDecoration(in: footerContainerView, decorationView: decorationView, decorationType: decorationType)
+            containerStackView.insertArrangedSubview(container, at: containerStackView.arrangedSubviews.count)
         }
+
+        container.pin(
+            anchors: [.leading, .trailing],
+            to: containerStackView
+        )
     }
 
     /// Creates a message content view
@@ -126,33 +142,6 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
         contentView.mainContainer.layoutMargins.bottom = max(
             contentView.mainContainer.layoutMargins.bottom,
             minimumSpacingBelow
-        )
-    }
-
-    private func updateDecoration(
-        in container: UIView,
-        decorationView: ChatMessageDecorationView?,
-        decorationType: ChatMessageDecorationType
-    ) {
-        container.subviews.forEach { $0.removeFromSuperview() }
-
-        guard let decorationView = decorationView else {
-            container.removeFromSuperview()
-            return
-        }
-
-        decorationView.translatesAutoresizingMaskIntoConstraints = false
-        container.embed(decorationView)
-        switch decorationType {
-        case .header:
-            containerStackView.insertArrangedSubview(container, at: 0)
-        case .footer:
-            containerStackView.insertArrangedSubview(container, at: containerStackView.arrangedSubviews.count)
-        }
-
-        container.pin(
-            anchors: [.leading, .trailing],
-            to: containerStackView
         )
     }
 }

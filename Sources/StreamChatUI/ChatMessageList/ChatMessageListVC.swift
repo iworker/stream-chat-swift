@@ -430,6 +430,7 @@ open class ChatMessageListVC: _ViewController,
         cell.messageContentView?.channel = channel
         cell.messageContentView?.content = message
 
+        /// Process cell decorations
         [ChatMessageDecorationType.header, .footer].forEach { decorationType in
             cell.updateDecoration(
                 for: decorationType,

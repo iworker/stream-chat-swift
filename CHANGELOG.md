@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### 🐞 Fixed
 - Fix messages appearing sooner in Thread pagination [#2470](https://github.com/GetStream/stream-chat-swift/pull/2470)
 - Fix messages disappearing from the Message List when quoting a message [#2470](https://github.com/GetStream/stream-chat-swift/pull/2470)
+### ✅ Added
+- Now you can easily configure your own Decorations(headers and/or footers) around messages [#2507](https://github.com/GetStream/stream-chat-swift/pull/2507)
 
 # [4.27.1](https://github.com/GetStream/stream-chat-swift/releases/tag/4.27.1)
 _February 20, 2023_
