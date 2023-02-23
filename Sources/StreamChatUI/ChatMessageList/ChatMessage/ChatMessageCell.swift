@@ -47,7 +47,10 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
         containerStackView.axis = .vertical
         containerStackView.alignment = .center
         containerStackView.spacing = 8
+
+        if !headerContainerView.subviews.isEmpty { containerStackView.addArrangedSubview(headerContainerView) }
         messageContentView.map { containerStackView.addArrangedSubview($0) }
+        if !footerContainerView.subviews.isEmpty { containerStackView.addArrangedSubview(footerContainerView) }
         contentView.addSubview(containerStackView)
 
         containerStackView.pin(
@@ -100,7 +103,7 @@ public class ChatMessageCell: _TableViewCell, ComponentsProvider {
         case .header:
             containerStackView.insertArrangedSubview(container, at: 0)
         case .footer:
-            containerStackView.insertArrangedSubview(container, at: containerStackView.arrangedSubviews.count)
+            containerStackView.addArrangedSubview(container)
         }
 
         container.pin(

@@ -6,7 +6,7 @@ import Foundation
 import UIKit
 
 /// A type that describes where a decoration will be placed
-public enum ChatMessageDecorationType {
+public enum ChatMessageDecorationType: Equatable {
     /// A header decoration is being placed above the
     /// cell's content
     case header
