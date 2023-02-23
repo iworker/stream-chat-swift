@@ -269,6 +269,10 @@ open class ChatThreadVC: _ViewController,
             let dateSeparatorView = components.messageListDateSeparatorView.init()
             dateSeparatorView.content = vc.dateSeparatorFormatter.format(message.createdAt)
             return dateSeparatorView
+        case .footer where components.threadRepliesCounterEnabled && message == messages.last:
+            let repliesCounterDecorationView = components.threadRepliesCounterDecorationView.init()
+            repliesCounterDecorationView.content = L10n.Message.Threads.count(message.replyCount)
+            return repliesCounterDecorationView
         default:
             return nil
         }
