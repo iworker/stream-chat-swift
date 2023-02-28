@@ -102,7 +102,6 @@ extension MessageReactionDTO {
     new.type = type.rawValue
     new.message = message
     new.user = user
-    new.score = 0
     return new
   }
 }
