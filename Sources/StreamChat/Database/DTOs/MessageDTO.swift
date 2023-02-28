@@ -833,8 +833,8 @@ extension NSManagedObjectContext: MessageDatabaseSession {
         }
 
         // make sure we update the reactionScores for the message in a way that works for new or updated reactions
-        let scoreDiff = Int64(score) - dto.score
-        let newScore = max(0, (message.reactionScores[type.rawValue] ?? Int(dto.score)) + Int(scoreDiff))
+        let messageScore = message.reactionScores[type.rawValue] ?? 0
+        let newScore = max(0, messageScore + score)
         message.reactionScores[type.rawValue] = newScore
 
         // Update reaction counts
@@ -844,7 +844,7 @@ extension NSManagedObjectContext: MessageDatabaseSession {
             message.reactionCounts[type.rawValue] = 1
         }
 
-        dto.score = Int64(score)
+        dto.score = Int64(newScore)
         dto.extraData = try JSONEncoder.default.encode(extraData)
         dto.localState = localState
 
