@@ -834,7 +834,7 @@ extension NSManagedObjectContext: MessageDatabaseSession {
 
         // make sure we update the reactionScores for the message in a way that works for new or updated reactions
         let scoreDiff = Int64(score) - dto.score
-        let newScore = max(0, message.reactionScores[type.rawValue] ?? Int(dto.score) + Int(scoreDiff))
+        let newScore = max(0, (message.reactionScores[type.rawValue] ?? Int(dto.score)) + Int(scoreDiff))
         message.reactionScores[type.rawValue] = newScore
 
         // Update reaction counts
