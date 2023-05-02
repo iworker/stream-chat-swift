@@ -230,8 +230,10 @@ public class ChatMessageSearchController: DataController, DelegateCallable, Data
         var updatedQuery = lastQuery
         if let nextPage = nextPageCursor, !lastQuery.sort.isEmpty {
             updatedQuery.pagination = Pagination(pageSize: limit, cursor: nextPage)
-        } else {
+        } else if lastQuery.sort.isEmpty {
             updatedQuery.pagination = Pagination(pageSize: limit, offset: messages.count)
+        } else {
+          return
         }
 
         messageUpdater.search(query: updatedQuery) { result in
