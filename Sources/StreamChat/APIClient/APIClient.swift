@@ -159,8 +159,15 @@ class APIClient {
 
                     // Do not retry unless its a connection problem and we still have retries left
                     if operation.canRetry {
+                      if error.isRateLimitError {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                          done(.retry)
+                        }
+                        return
+                      } else {
                         done(.retry)
                         return
+                      }
                     }
 
                     if inRecoveryMode {
