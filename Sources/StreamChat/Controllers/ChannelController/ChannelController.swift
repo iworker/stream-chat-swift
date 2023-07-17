@@ -97,7 +97,7 @@ public class ChatChannelController: DataController, DelegateCallable, DataStoreP
     /// A Boolean value that returns whether the channel is currently in a mid-page.
     /// The value is false if the channel has the first page loaded.
     /// The value is true if the channel is in a mid fragment and didn't load the first page yet.
-    public private(set) var isJumpingToMessage: Bool = true
+    public private(set) var isJumpingToMessage: Bool = false
 
     /// The pagination cursor for loading previous (old) messages.
     internal private(set) var lastOldestMessageId: MessageId?
@@ -1128,13 +1128,13 @@ public class ChatChannelController: DataController, DelegateCallable, DataStoreP
         }
     }
 
-    deinit {
-        guard self.isJumpingToMessage, let cid = self.cid else { return }
-        dataStore.database.write { session in
-            let channelDTO = session.channel(cid: cid)
-            channelDTO?.cleanAllMessagesExcludingLocalOnly()
-        }
-    }
+//    deinit {
+//        guard self.isJumpingToMessage, let cid = self.cid else { return }
+//        dataStore.database.write { session in
+//            let channelDTO = session.channel(cid: cid)
+//            channelDTO?.cleanAllMessagesExcludingLocalOnly()
+//        }
+//    }
 }
 
 // MARK: - Environment

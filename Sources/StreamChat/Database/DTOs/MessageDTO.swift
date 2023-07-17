@@ -333,8 +333,8 @@ class MessageDTO: NSManagedObject {
             deletedMessagesVisibility: deletedMessagesVisibility,
             shouldShowShadowedMessages: shouldShowShadowedMessages
         )
-        request.fetchLimit = pageSize
-        request.fetchBatchSize = pageSize
+//        request.fetchLimit = pageSize
+//        request.fetchBatchSize = pageSize
         return request
     }
 
