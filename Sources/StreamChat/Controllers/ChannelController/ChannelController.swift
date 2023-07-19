@@ -1128,6 +1128,14 @@ public class ChatChannelController: DataController, DelegateCallable, DataStoreP
         }
     }
 
+    public func clearDB() {
+        guard self.isJumpingToMessage, let cid = self.cid else { return }
+        dataStore.database.write { session in
+            let channelDTO = session.channel(cid: cid)
+            channelDTO?.cleanAllMessagesExcludingLocalOnly()
+        }
+    }
+  
 //    deinit {
 //        guard self.isJumpingToMessage, let cid = self.cid else { return }
 //        dataStore.database.write { session in
