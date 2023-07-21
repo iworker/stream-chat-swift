@@ -580,6 +580,11 @@ extension ChannelDTO {
         case .around:
             self.oldestMessageAt = oldestMessageAt
             self.newestMessageAt = newestMessageAt
+            if let lastDate = self.lastMessageAt?.bridgeDate,
+               let newDate = self.newestMessageAt?.bridgeDate,
+               lastDate <= newDate {
+              self.newestMessageAt = nil
+            }
 
         // When loading first page
         case .none:
