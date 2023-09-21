@@ -44,6 +44,7 @@ enum EndpointPath: Codable {
     case flagUser(Bool)
     case flagMessage(Bool)
     case muteUser(Bool)
+    case bannedUsers
 
     case callToken(String)
     case createCall(String)
@@ -89,6 +90,7 @@ enum EndpointPath: Codable {
         case let .flagUser(flag): return "moderation/\(flag ? "flag" : "unflag")"
         case let .flagMessage(flag): return "moderation/\(flag ? "flag" : "unflag")"
         case let .muteUser(mute): return "moderation/\(mute ? "mute" : "unmute")"
+        case .bannedUsers: return "query_banned_users"
         case let .callToken(callId): return "calls/\(callId)"
         case let .createCall(queryString): return "channels/\(queryString)/call"
         }
@@ -100,7 +102,7 @@ enum EndpointPath: Codable {
         case connect, sync, users, guest, members, search, devices, channels, createChannel, updateChannel, deleteChannel,
              channelUpdate, muteChannel, showChannel, truncateChannel, markChannelRead, markAllChannelsRead, channelEvent,
              stopWatchingChannel, pinnedMessages, uploadAttachment, sendMessage, message, editMessage, deleteMessage, replies,
-             reactions, addReaction, deleteReaction, messageAction, translate, banMember, flagUser, flagMessage, muteUser
+             reactions, addReaction, deleteReaction, messageAction, translate, banMember, flagUser, flagMessage, muteUser, bannedUsers
     }
 
     init(from decoder: Decoder) throws {
@@ -197,6 +199,8 @@ enum EndpointPath: Codable {
             self = try .flagMessage(container.decode(Bool.self, forKey: key))
         case .muteUser:
             self = try .muteUser(container.decode(Bool.self, forKey: key))
+        case .bannedUsers:
+            self = .bannedUsers
         }
     }
 
@@ -280,6 +284,8 @@ enum EndpointPath: Codable {
             try container.encode(bool, forKey: .flagMessage)
         case let .muteUser(bool):
             try container.encode(bool, forKey: .muteUser)
+        case .bannedUsers:
+            try container.encode(true, forKey: .bannedUsers)
         }
     }
     #endif
